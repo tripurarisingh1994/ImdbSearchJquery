@@ -6,12 +6,13 @@ $(document).ready(function () {
     $('#select_type').change(function () {
 
         if ($('#select_type').val() == 'id') {
-
+            $('#result').empty();
             $('#year-col').css('display', 'none');
             $('#search_key').attr('placeholder', 'Imdb Id')
             $('#search_key').focus();
         }
         else {
+            $('#result').empty();
             $('#year-col').css('display', 'block');
             $('#search_key').attr('placeholder', 'Movie Title');
             $('#search_key').focus();
@@ -28,14 +29,14 @@ $(document).ready(function () {
     });
 
     $('#search_btn').click(function () {
-
+        $('#result').empty();
         let url = '';
 
         if ($('#select_type').val() == 'id') {
 
             let searchKey = $('#search_key').val();
 
-            url = `http://www.omdbapi.com/?i=${searchKey}&apikey=2a153d57`;
+            url = `https://www.omdbapi.com/?i=${searchKey}&apikey=2a153d57`;
         }
         else {
 
@@ -43,10 +44,10 @@ $(document).ready(function () {
             let searchYear = $('#select_year').val();
 
             if (!searchYear) {
-                url = `http://www.omdbapi.com/?t=${searchKey}&apikey=2a153d57`;
+                url = `https://www.omdbapi.com/?t=${searchKey}&apikey=2a153d57`;
             }
             else {
-                url = `http://www.omdbapi.com/?t=${searchKey}&y=${searchYear}&apikey=2a153d57`;
+                url = `https://www.omdbapi.com/?t=${searchKey}&y=${searchYear}&apikey=2a153d57`;
             }
 
         }
@@ -91,7 +92,7 @@ $(document).ready(function () {
                 $('#result').append(card);
             }
             else if (response.Response == 'False') {
-                $('#result').append('<h3 style="text-align:center;margin-top:10%;">Result Not Found</h3>');
+                $('#result').append(`<h3 style="text-align:center;margin-top:10%;">${response.Error}</h3>`);
             }
 
         });

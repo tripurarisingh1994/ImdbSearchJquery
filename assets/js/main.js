@@ -20,7 +20,7 @@ $(document).ready(function () {
     });
 
     $('#search_key').keyup(function () {
-        if ($(this).val().length > 3) {
+        if ($(this).val().length > 2) {
             $('#search_btn').prop('disabled', false);
         }
         else {
@@ -65,7 +65,7 @@ $(document).ready(function () {
 
             if (response.Response == 'True') {
 
-                if (response.Poster == '') {
+                if (response.Poster == 'N/A') {
                     response.Poster = 'dummy_poster.png';
                 }
 

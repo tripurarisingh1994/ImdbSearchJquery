@@ -20,7 +20,7 @@ $(document).ready(function () {
     });
 
     $('#search_key').keyup(function () {
-        if ($(this).val().length > 2) {
+        if ($(this).val().length > 1) {
             $('#search_btn').prop('disabled', false);
         }
         else {

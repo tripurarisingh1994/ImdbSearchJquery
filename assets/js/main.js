@@ -66,7 +66,7 @@ $(document).ready(function () {
             if (response.Response == 'True') {
 
                 if (response.Poster == 'N/A') {
-                    image = 'dummy_poster.png';
+                    image = 'assets/img/dummy_poster.png';
                 }
                 else {
                     image = response.Poster;
@@ -74,7 +74,7 @@ $(document).ready(function () {
 
                 let card = `<div class="row" style="margin:0px;padding:20px;">
                 <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" style="padding:0px;">
-                    <div style="background-image:url(&quot;${response.Poster}&quot;);height:50vh;background-repeat:no-repeat;background-size:cover;background-position:center;"></div>
+                    <div style="background-image:url(&quot;${image}&quot;);height:50vh;background-repeat:no-repeat;background-size:cover;background-position:center;"></div>
                 </div>
                 <div class="w-100 d-sm-block d-md-none d-lg-none d-xl-none"></div>
                 <div class="col" style="padding:0px;">

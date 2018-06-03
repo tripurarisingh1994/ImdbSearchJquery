@@ -57,6 +57,10 @@ $(document).ready(function () {
             "crossDomain": true,
             "url": url,
             "method": "GET",
+            "headers": { 
+                "Access-Control-Allow-Origin" : "*",
+                "Access-Control-Allow-Credentials": "true"
+            }
         }
 
         $.ajax(settings).done(function (response) {

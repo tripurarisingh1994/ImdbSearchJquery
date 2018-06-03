@@ -1,84 +1,99 @@
-$(document).ready(function() {
-        $('#search_btn').prop('disabled', true);
-        $('#search_key').focus();
-        $('#year-col').css('display','none');
+$(document).ready(function () {
+    $('#search_btn').prop('disabled', true);
+    $('#search_key').focus();
+    $('#year-col').css('display', 'none');
 
-    let yearList = [
-        1920, 1921, 1922, 1923, 1924, 1925, 1926, 1927, 1928, 1929,
-        1930, 1931, 1932, 1933, 1934, 1935, 1936, 1937, 1938, 1939,
-        1940, 1941, 1942, 1943, 1944, 1945, 1946, 1947, 1948, 1949,
-        1950, 1951, 1952, 1953, 1954, 1955, 1956, 1957, 1958, 1959,
-        1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969,
-        1970, 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979,
-        1980, 1981, 1982, 1983, 1984, 1985, 1986, 1987, 1988, 1989,
-        1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
-        2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009,
-        2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019
-    ];
+    $('#select_type').change(function () {
 
-    yearList.forEach(year => {
-       $('#select_year').append('<option value="'+year+'">'+year+'</option>');
-    });
+        if ($('#select_type').val() == 'id') {
 
-
-    $('#select_type').change(function() {
-
-        if($('#select_type').val()=='id') {
-
-            $('#year-col').css('display','none');
-            $('#search_key').attr('placeholder','Imdb Id')
+            $('#year-col').css('display', 'none');
+            $('#search_key').attr('placeholder', 'Imdb Id')
             $('#search_key').focus();
         }
         else {
-            $('#year-col').css('display','block');
-            $('#search_key').attr('placeholder','Movie Title');
+            $('#year-col').css('display', 'block');
+            $('#search_key').attr('placeholder', 'Movie Title');
             $('#search_key').focus();
         }
     });
 
-    $('#search_key').keyup(function() {
-        if($(this).val().length > 3) {
-           $('#search_btn').prop('disabled', false);
+    $('#search_key').keyup(function () {
+        if ($(this).val().length > 3) {
+            $('#search_btn').prop('disabled', false);
         }
         else {
             $('#search_btn').prop('disabled', true);
         }
-     });
+    });
 
-    $('#search_btn').click(function() {
+    $('#search_btn').click(function () {
 
         let url = '';
 
-            if($('#select_type').val()=='id') {
+        if ($('#select_type').val() == 'id') {
 
-                let searchKey = $('#search_key').val();
-                console.log(searchKey);
+            let searchKey = $('#search_key').val();
 
-              url:`http://www.omdbapi.com/?i=${searchKey}&apikey=2a153d57`;
+            url = `http://www.omdbapi.com/?i=${searchKey}&apikey=2a153d57`;
+        }
+        else {
+
+            let searchKey = $('#search_key').val();
+            let searchYear = $('#select_year').val();
+
+            if (!searchYear) {
+                url = `http://www.omdbapi.com/?t=${searchKey}&apikey=2a153d57`;
             }
             else {
-
-                let searchKey = $('#search_key').val();
-                let searchYear = $('#select_year').val();
-
-                console.log(searchKey);
-                console.log(searchYear);
-
-                url:`http://www.omdbapi.com/?t=${searchKey}&y=${searchYear}&apikey=2a153d57`;
+                url = `http://www.omdbapi.com/?t=${searchKey}&y=${searchYear}&apikey=2a153d57`;
             }
 
-            let settings = {
-                "async": true,
-                "crossDomain": true,
-                "url": url,
-                "method": "GET",
-                "headers": {
-                  "cache-control": "no-cache",
+        }
+
+
+        let settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": url,
+            "method": "GET",
+        }
+
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+
+            if (response.Response == 'True') {
+
+                if (response.Poster == '') {
+                    response.Poster = 'dummy_poster.png';
                 }
-              }
-              
-              $.ajax(settings).done(function (response) {
-                console.log(response);
-              });
+
+                let card = `<div class="row" style="margin:0px;padding:20px;">
+                <div class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-4" style="padding:0px;">
+                    <div style="background-image:url(&quot;${response.Poster}&quot;);height:50vh;background-repeat:no-repeat;background-size:cover;background-position:center;"></div>
+                </div>
+                <div class="w-100 d-sm-block d-md-none d-lg-none d-xl-none"></div>
+                <div class="col" style="padding:0px;">
+                    <div class="card">
+                        <div class="card-body" style="height:50vh;">
+                            <h4 class="card-title">${response.Title}&nbsp;&nbsp;&nbsp;(${response.Year})</h4>
+                            <h6 class="text-muted card-subtitle mb-2">R |&nbsp;<span>${response.Runtime}</span>&nbsp; |&nbsp;<span>${response.Genre}</span></h6>
+                            <h6>Rating &nbsp;<span>${response.imdbRating}</span>&nbsp;</h6>
+                            <p class="card-text">${response.Plot}</p>
+                            <h6>Director:&nbsp;<span>${response.Director}</span>&nbsp; &nbsp;| &nbsp;Starts: &nbsp;<span>${response.Actors}</span></h6>
+                            <h6>Votes: &nbsp;<span>${response.imdbVotes}</span>&nbsp;</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+
+
+                $('#result').append(card);
+            }
+            else if (response.Response == 'False') {
+                $('#result').append('<h3 style="text-align:center;margin-top:10%;">Result Not Found</h3>');
+            }
+
+        });
     });
 });

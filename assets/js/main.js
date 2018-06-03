@@ -62,11 +62,14 @@ $(document).ready(function () {
 
         $.ajax(settings).done(function (response) {
             console.log(response);
-
+            let image='';
             if (response.Response == 'True') {
 
                 if (response.Poster == 'N/A') {
-                    response.Poster = 'dummy_poster.png';
+                    image = 'dummy_poster.png';
+                }
+                else {
+                    image = response.Poster;
                 }
 
                 let card = `<div class="row" style="margin:0px;padding:20px;">
